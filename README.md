@@ -140,3 +140,29 @@ class WelcomeNotification extends CustomBaseNotification{
 ## What you need to change ?
 
 ##### In each notification, you can override the `viaThirdPartyService` function to implement custom API calls to the third-party service, allowing you to tailor the integration to your specific needs.
+
+## And to test this in pest :
+
+```php
+<?php
+use App\Models\User;
+use App\Notifications\ThankForYourFeedbackNotification;
+use App\Notifications\WelcomeNotification;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Route;
+
+test('route sends both ThankForYourFeedbackNotification and WelcomeNotification', function () {
+    Notification::fake();
+    $user =User::first();
+    $response = $this->get('/send-notif');
+    Notification::assertSentTo(
+        $user,
+        ThankForYourFeedbackNotification::class
+    );
+    Notification::assertSentTo(
+        $user,
+        WelcomeNotification::class
+    );
+});
+
+```
